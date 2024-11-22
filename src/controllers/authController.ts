@@ -11,7 +11,16 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   if (password !== confirmPassword) {
     res.status(400).json({ message: "Passwords do not match!" });
     return;
-  }
+    }
+    const userExists = users.find(
+      (user) => user.email === email || user.phone === phone
+    );
+    if (userExists) {
+      res
+        .status(409)
+        .json({ message: "User with this email or phone already exists!" });
+      return;
+    }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = { name, email, phone, password: hashedPassword };
