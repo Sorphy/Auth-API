@@ -6,14 +6,15 @@ import { sendEmail } from "../utils/notification";
 import { users, User } from "../utils/users";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, phone, password, confirmPassword } = req.body;
-
+    const { name, email, phone, password, confirmPassword } = req.body;
+    
+    const savedEmail = email.toLowerCase();
   if (password !== confirmPassword) {
     res.status(400).json({ message: "Passwords do not match!" });
     return;
     }
     const userExists = users.find(
-      (user) => user.email === email || user.phone === phone
+      (user) => user.email === savedEmail || user.phone === phone
     );
     if (userExists) {
       res
